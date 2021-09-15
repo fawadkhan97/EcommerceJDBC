@@ -15,13 +15,14 @@ public class Test {
             System.out.println("Select * from items\n");
             int coloumnNumbers = resultSetMetaData.getColumnCount();
 
-            while (resultSet.next()){
-                for(int i =0 ; i<=coloumnNumbers;i++){
-
+            while (resultSet.next()) {
+                for (int i = 1; i <= coloumnNumbers; i++) {
+                    if (i > 1) System.out.print(", ");
+                    System.out.print(resultSetMetaData.getColumnName(i).toLowerCase() + " " + resultSet.getString(i));
                 }
+                System.out.print("\n");
+
             }
-
-
 
 
             conn.close();
