@@ -1,8 +1,8 @@
 public class Items {
 
-   private String itemName;
-   private int quantity;
-private  int unitPrice;
+    private String itemName;
+    private int quantity;
+    private int itemprice;
 
 
     public String getItemName() {
@@ -21,11 +21,11 @@ private  int unitPrice;
         this.quantity = quantity;
     }
 
-    public int getUnitPrice() {
-        return unitPrice;
+    public int getItemprice() {
+        return itemprice;
     }
 
-    public void setUnitPrice(int unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setItemprice(int itemprice) {
+        this.itemprice = itemprice;
     }
 }

@@ -29,7 +29,7 @@ public class GetItemsOperations implements getItems {
             id = resultSet.getInt("itemid");
             name = resultSet.getString("itemname");
             quantity = resultSet.getInt("itemquantity");
-            price = resultSet.getInt("unitprice");
+            price = resultSet.getInt("itemprice");
             System.out.format("%1s %10s %15s %15s ",id ,name ,quantity ,price);
             System.out.print("\n");
         }while (resultSet.next());

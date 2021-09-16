@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class DBConnection {
-    private static String jdbcURL = "jdbc:h2:tcp://localhost/~/test";
+   private static String jdbcURL = "jdbc:h2:tcp://localhost/~/test";
     private static String jdbcUsername = "sa";
     private static String jdbcPassword = "";
 

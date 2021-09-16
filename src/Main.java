@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -6,8 +7,10 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         String choice;
-        String userchoice;
+        String userchoice = "";
         AdminOperationsImplementation admin;
+        CustomerOperationsImplementation customer;
+        GetItemsOperations getitems;
         Items items;
 
         do {
@@ -18,61 +21,102 @@ public class Main {
             switch (choice) {
                 // to create user type
                 case "1":
-                    GetItemsOperations getitems = new GetItemsOperations();
+                    getitems = new GetItemsOperations();
                     try {
                         getitems.getItemsDetails();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
 
-                    System.out.println(" \n Press M : Modify Existing Items \n Press A: add new items ");
-                    userchoice = input.next().toLowerCase();
+                    do {
+                        System.out.println("\n Press A: add new items  \n Press M : Modify Existing Items ");
+                        userchoice = input.next().toLowerCase();
+                        switch (userchoice) {
+                            case "a":
+                                items = new Items();
+                                System.out.println("please enter items details \n");
 
-                    switch (userchoice) {
-                        case "m":
-                            admin= new AdminOperationsImplementation();
+                                System.out.print("enter item Name: ");
+                                items.setItemName(input.next());
+                                System.out.print("Enter item quantity: ");
+                                items.setQuantity(input.nextInt());
+                                System.out.print("Enter items Price: ");
+                                items.setItemprice(input.nextInt());
 
-                            System.out.println("please enter itemsID you want to change");
-                            int newId =input.nextInt();
+                                System.out.println("added items are ");
+                                System.out.println(items.getItemName() + " " + items.getQuantity() + " " + items.getItemprice());
+
+                                try {
+                                    admin = new AdminOperationsImplementation();
+                                    admin.addNewitems(items);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+
+                                break;
+                            case "m":
+                                items = new Items();
+                                System.out.println("please enter itemsID you want to change");
+                                int newId = input.nextInt();
+                                System.out.print("enter item Name: ");
+                                items.setItemName(input.next());
+                                System.out.print("Enter item quantity: ");
+                                items.setQuantity(input.nextInt());
+                                System.out.print("Enter items Price: ");
+                                items.setItemprice(input.nextInt());
+                                try {
+                                    admin = new AdminOperationsImplementation();
+                                    admin.modifyItems(newId, items);
+                                    System.out.println("added items successfully ");
+                                    System.out.println(items.getItemName() + " " + items.getQuantity() + " " + items.getItemprice());
+                                    do {
+                                        System.out.print("\n do you want to continue ?  Y or N :  ");
+                                        userchoice = input.next().toLowerCase();
+                                        switch (userchoice) {
+                                            case "y":
+                                                userchoice = ";";
+                                                break;
+                                            case "n":
+                                                System.out.println("-------------good bye----------");
+                                                System.exit(0);
+                                            default:
+                                                System.out.println("Incorrect,Enter correct option again ");
+                                        }
+                                    } while (userchoice != ";");
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
 
 
-                            try {
-                                admin.modifyItems(newId);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case "a":
-                            items = new Items();
-                            System.out.println("please enter items details \n");
+                                break;
+                            default:
+                                System.out.println("Incorrect options was entered ");
 
-                            System.out.print("enter item Name: ");
-                            items.setItemName(input.next());
-                            System.out.print("Enter item quantity: ");
-                            items.setQuantity(input.nextInt());
-                            System.out.print("Enter items Price: ");
-                            items.setUnitPrice(input.nextInt());
-
-                            System.out.println("added items are ");
-                            System.out.println(items.getItemName() + " " + items.getQuantity() + " " + items.getUnitPrice());
-
-                            try {
-                                admin = new AdminOperationsImplementation();
-                                admin.addNewitems(items);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-
-                            break;
-
-                        default:
-                            System.out.println("Incorrect options was entered");
-                    }
-
-
+                        }
+                    } while (userchoice != "0");
                     break;
                 case "2":
-                    System.out.println("user selected");
+                    getitems = new GetItemsOperations();
+                    try {
+                        getitems.getItemsDetails();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    customer = new CustomerOperationsImplementation();
+                    do {
+                        System.out.print("\nSelect items from above list (itemid): ");
+                        int userOrderId = input.nextInt();
+
+                        System.out.print("\n Enter quantity: ");
+                        int quantity = input.nextInt();
+                        try {
+                            customer.createOrder(userOrderId);
+                            customer.createOrder_items(userOrderId,quantity);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                    } while (userchoice != "0");
                     break;
                 default:
                     System.out.println("Enter correct option again \n");

@@ -1,8 +1,11 @@
- public interface customerOperations {
+import java.sql.SQLException;
 
-    void createOrder (int id , int quantity );
+public interface customerOperations {
 
-    void printOrderDetails();
+    void createOrder (int itemid  ) throws SQLException;
+    void createOrder_items(int itemid, int quantity) throws SQLException;
+    void printOrderDetails(int orderid)  throws SQLException;
 
-    void markOrderCompleted();
+    void markOrderCompleted()  throws SQLException;
+    void printInvoice()  throws SQLException;
 }
