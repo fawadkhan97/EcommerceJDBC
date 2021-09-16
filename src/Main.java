@@ -30,6 +30,17 @@ public class Main {
 
                     switch (userchoice) {
                         case "m":
+                            admin= new AdminOperationsImplementation();
+
+                            System.out.println("please enter itemsID you want to change");
+                            int newId =input.nextInt();
+
+
+                            try {
+                                admin.modifyItems(newId);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case "a":
                             items = new Items();

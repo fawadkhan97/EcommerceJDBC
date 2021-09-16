@@ -3,11 +3,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AdminOperationsImplementation implements adminOperations {
-
+    Connection connection = DBConnection.getDBConnection() ;
     @Override
     public void addNewitems(Items items) throws SQLException {
-
-         Connection connection = DBConnection.getDBConnection() ;
        final String insertItemsQuery = "INSERT INTO items" +
                 "  (itemname, unitprice,itemquantity) VALUES " +
                 " (?, ?,?);";
@@ -25,8 +23,12 @@ public class AdminOperationsImplementation implements adminOperations {
 
 
     @Override
-    public void modifyItems(String name) {
-
+    public void modifyItems(int id) throws SQLException {
+        final String UpdateItemsQuery = "update users set itemname = ?, set unitprice=?,set itemquantity=?, where itemid = ?;"
+        PreparedStatement insertItems = connection.prepareStatement(UpdateItemsQuery);
+        insertItems.setString(1 );
+        insertItems.setInt(2, items.getUnitPrice());
+        insertItems.setInt(3,items.getQuantity());
 
 
     }
