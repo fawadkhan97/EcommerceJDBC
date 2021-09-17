@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 public class CustomerOperationsImplementation implements customerOperations {
     Connection connection = DBConnection.getDBConnection();
-    final String getOrderidQuery = "SELECT MAX (orderid) FROM orders;";
     final String getitempriceQuery = "SELECT ITEMPRICE from items where itemid =?;";
     final String insertOrder_items = "INSERT INTO order_items" +
             "  (orderid, itemid, orderquantity,orderprice) VALUES " +
