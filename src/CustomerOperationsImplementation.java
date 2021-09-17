@@ -83,7 +83,7 @@ public class CustomerOperationsImplementation implements customerOperations {
     }
 
     @Override
-    public void printInvoice(int Orderid) throws SQLException {
+    public int printInvoice(int Orderid) throws SQLException {
 
         PreparedStatement viewOrderItems = connection.prepareStatement(getOrderItemsQuery);
         viewOrderItems.setInt(1, Orderid);
@@ -91,24 +91,26 @@ public class CustomerOperationsImplementation implements customerOperations {
         // Step 3: Execute the query or update query
         ResultSet resultSet = viewOrderItems.executeQuery();
         // Step 4: Display the ResultSet object.
-
-        if (!resultSet.next()) {
-            System.out.println("No items are available..");
-        } else {
-
-            System.out.println("DbOperations place ");
-            System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------");
-            do {
-
+        int totalprice = 0;
+        do {
+            if (!resultSet.next()) {
+                System.out.println("No items are available..");
+            } else {
+                totalprice += resultSet.getInt("orderprice");
+                System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------");
                 System.out.format("%2s %15s %14s %13s %13s", resultSet.getInt("orderid"), resultSet.getString("itemname"),
                         resultSet.getInt("itemid"), resultSet.getInt("orderquantity"), resultSet.getInt("orderprice"));
                 System.out.print("\n");
                 System.out.println("---------------------------------------------------");
-            } while (resultSet.next());
+            }
+        } while (resultSet.next());
+        System.out.println("total price of order is "+totalprice);
 
-        }
-
-
+        return totalprice;
 
     }
+
 }
+
+
+

@@ -7,5 +7,5 @@ public interface customerOperations {
     void printOrderDetails(int orderid, int itemID)  throws SQLException;
 
     void markOrderCompleted()  throws SQLException;
-    void printInvoice(int Orderid)  throws SQLException;
+    int printInvoice(int Orderid)  throws SQLException;
 }

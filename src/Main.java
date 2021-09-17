@@ -127,28 +127,28 @@ public class Main {
                                 System.out.print("\n please enter correct id from above list  again : ");
                                 break;
                             } else {
-
-
                                 System.out.print("\n Enter quantity: ");
                                 int quantity = input.nextInt();
                                 try {
                                     customer.createOrder_items(itemid, quantity, itemPrice);
                                     System.out.println("do you want to Purchase any more items.  Yes or No ?");
-                               do {
-                                   userchoice = input.next().toLowerCase();
-                                   switch (userchoice) {
-                                       case "yes":
-                                           getitems.getItemsDetails();
-                                           System.out.print("\n Select items from above list (itemid): ");
-                                           break;
-                                       case "no":
-                                           int orderid=  dbOperations.getOrderId();
-                                           //     customer.printInvoice(orderid);
-                                           break;
-                                       default:
-                                           System.out.println("incorrect options was entered .  Do you want to purchase items. Yes or No");
-                                   }
-                               }while (userchoice!="!");
+                                    do {
+                                        userchoice = input.next().toLowerCase();
+                                        switch (userchoice) {
+                                            case "yes":
+                                                getitems.getItemsDetails();
+                                                System.out.print("\n Select items from above list (itemid): ");
+                                                userchoice="!";
+                                                break;
+                                            case "no":
+                                                int orderid = dbOperations.getOrderId();
+                                                     customer.printInvoice(orderid);
+                                                     System.exit(0);
+                                                break;
+                                            default:
+                                                System.out.println("incorrect options was entered .  Do you want to purchase items. Yes or No");
+                                        }
+                                    } while (userchoice != "!");
 
                                 } catch (SQLException e) {
                                     e.printStackTrace();
