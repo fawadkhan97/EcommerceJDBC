@@ -5,47 +5,49 @@ import java.sql.SQLException;
 
 public class CustomerOperationsImplementation implements customerOperations {
     Connection connection = DBConnection.getDBConnection();
+    final String getOrderidQuery = "SELECT MAX (orderid) FROM orders;";
+    final String getitempriceQuery = "SELECT ITEMPRICE from items where itemid =?;";
+    final String insertOrder_items = "INSERT INTO order_items" +
+            "  (orderid, itemid, orderquantity,orderprice) VALUES " +
+            " (?, ?, ?,?);";
+    final String setOrderStatusQuery = "INSERT INTO Orders" +
+            "  (orderStatus) VALUES " +
+            " (?);";
 
     @Override
-    public void createOrder(int id) throws SQLException {
+    public void createOrder() throws SQLException {
         // insert into Orders table
-        final String OrderstatusQuery = "INSERT INTO Orders" +
-                "  (orderStatus) VALUES " +
-                " (?);";
-        PreparedStatement insertItems = connection.prepareStatement(OrderstatusQuery);
-        insertItems.setString(1, "Pending...");
-        System.out.println(insertItems);
-        insertItems.executeUpdate();
+        PreparedStatement insertItemsStatement = connection.prepareStatement(setOrderStatusQuery);
+        insertItemsStatement.setString(1, "Pending...");
+        insertItemsStatement.executeUpdate();
     }
 
-
+    //customers interface implementation
     @Override
-    public void createOrder_items(int itemid, int quantity) throws SQLException {
-        System.out.println("creating orders itemid is : " + itemid + " QUANITTY: " + quantity);
-        // get latest order id from db
-        final String getOrderidQuery = "SELECT MAX (orderid) FROM orders;";
-        PreparedStatement getOrderid = connection.prepareStatement(getOrderidQuery);
-        ResultSet resultSet = getOrderid.executeQuery();
-        int Orderid = -1;
+    public void createOrder_items(int itemId, int Itemquantity) throws SQLException {
+        System.out.println("creating orders itemid is : " + itemId + " QUANITTY: " + Itemquantity);
 
-        // check if id exists before fetching
-        if (!resultSet.next()) {
-            System.out.println("Table is empty");
-        } else {
-            // fetch order id
-            Orderid = resultSet.getInt("MAX(ORDERID)");
-            System.out.println("order id: " + Orderid);
-            printOrderDetails(Orderid);
-        }
+        // get items price
+        PreparedStatement getItemPriceStatement = connection.prepareStatement(getitempriceQuery);
+        getItemPriceStatement.setInt(1,6);
+
+        System.out.println("item query"+getItemPriceStatement);
+        ResultSet itemPriceResultSet = getItemPriceStatement.executeQuery();
+        itemPriceResultSet.next();
+        int itemPrice = itemPriceResultSet.getInt("ITEMPRICE");
+        int orderPrice = 1;
+        orderPrice=Itemquantity * itemPrice;
+        System.out.println("Item price is "+itemPrice + "\t Order price is "+orderPrice);
+
+
+
         // insert into Order_items table
-        final String insertOrder_items = "INSERT INTO orders_items" +
-                "  (orderid, itemid, orderquantity) VALUES " +
-                " (?, ?, ?);";
         PreparedStatement insertOrderItems = connection.prepareStatement(insertOrder_items);
         // insert into table columns
         insertOrderItems.setInt(1, Orderid);
-        insertOrderItems.setInt(2, itemid);
-        insertOrderItems.setInt(3, quantity);
+        insertOrderItems.setInt(2, itemId);
+        insertOrderItems.setInt(3, Itemquantity);
+        insertOrderItems.setInt(4, orderPrice);
         System.out.println(insertOrderItems);
         insertOrderItems.executeUpdate();
         printOrderDetails(Orderid);
@@ -53,7 +55,7 @@ public class CustomerOperationsImplementation implements customerOperations {
 
     @Override
     public void printOrderDetails(int orderId) throws SQLException {
-        final String viewOrderItemsQuery = "select * from ORDERS_ITEMS where orderid >= ?";
+        final String viewOrderItemsQuery = "select * from ORDER_ITEMS where orderid >= ?";
         // Step 2:Create a statement using connection object
         PreparedStatement viewOrderItems = connection.prepareStatement(viewOrderItemsQuery);
         viewOrderItems.setInt(1, orderId);
@@ -68,14 +70,17 @@ public class CustomerOperationsImplementation implements customerOperations {
             int orderId1;
             int quantity;
             int itemId;
+            int orderPrice;
             System.out.println("Order place ");
-            System.out.println("OrderID \t ItemID \t OrderQuantity\n -----------------------------------------------");
+            System.out.println("OrderID \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------");
             do {
                 orderId1 = resultSet.getInt("orderid");
                 itemId = resultSet.getInt("itemid");
                 quantity = resultSet.getInt("orderquantity");
-                System.out.format("%1s %10s %15s ", orderId1, itemId, quantity);
+                orderPrice=resultSet.getInt("orderprice");
+                System.out.format("%1s %12s %16s %16s", orderId1, itemId, quantity , orderPrice);
                 System.out.print("\n");
+                System.out.println("---------------------------------------------------");
             } while (resultSet.next());
 
         }

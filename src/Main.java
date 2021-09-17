@@ -1,5 +1,4 @@
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -19,7 +18,8 @@ public class Main {
             System.out.print("Enter your choice: ");
             choice = input.next();
             switch (choice) {
-                // to create user type
+                //  get items from database
+                // admin operations
                 case "1":
                     getitems = new GetItemsOperations();
                     try {
@@ -95,6 +95,7 @@ public class Main {
                         }
                     } while (userchoice != "0");
                     break;
+                // child operations
                 case "2":
                     getitems = new GetItemsOperations();
                     try {
@@ -103,15 +104,34 @@ public class Main {
                         e.printStackTrace();
                     }
                     customer = new CustomerOperationsImplementation();
+                    // create order , same order id will be use for all products user purchase
+                    try {
+                        customer.createOrder();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     do {
                         System.out.print("\nSelect items from above list (itemid): ");
-                        int userOrderId = input.nextInt();
+                        int itemid = input.nextInt();
 
                         System.out.print("\n Enter quantity: ");
                         int quantity = input.nextInt();
                         try {
-                            customer.createOrder(userOrderId);
-                            customer.createOrder_items(userOrderId,quantity);
+                            customer.createOrder_items(itemid, quantity);
+
+
+                            System.out.println("do you want to Purchase any more items ?");
+                            userchoice = input.next().toLowerCase();
+                            switch (userchoice) {
+                                case "y":
+                                    System.out.println("Y");
+                                    break;
+                                case "n":
+                                    customer.printOrderDetails();
+                                    break;
+                                default:
+                                    System.out.println("incorrect options was entered");
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
