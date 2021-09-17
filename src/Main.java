@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -141,8 +142,10 @@ public class Main {
                                                 userchoice="!";
                                                 break;
                                             case "no":
+                                                System.out.println("Are you telenor Customer . True or False");
+                                                Boolean telenorCustomer=input.nextBoolean();
                                                 int orderid = dbOperations.getOrderId();
-                                                     customer.printInvoice(orderid);
+                                                     customer.printInvoice(orderid,telenorCustomer);
                                                      System.exit(0);
                                                 break;
                                             default:

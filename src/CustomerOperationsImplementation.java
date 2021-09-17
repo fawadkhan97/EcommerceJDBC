@@ -65,25 +65,25 @@ public class CustomerOperationsImplementation implements customerOperations {
         } else {
 
             System.out.println("DbOperations place ");
-            System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------");
+            System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------------------");
             do {
 
                 System.out.format("%2s %15s %14s %13s %13s", resultSet.getInt("orderid"), resultSet.getString("itemname"),
                         resultSet.getInt("itemid"), resultSet.getInt("orderquantity"), resultSet.getInt("orderprice"));
                 System.out.print("\n");
-                System.out.println("---------------------------------------------------");
+                System.out.println("---------------------------------------------------------------");
             } while (resultSet.next());
 
         }
     }
 
-    @Override
-    public void markOrderCompleted() throws SQLException {
-
-    }
 
     @Override
-    public int printInvoice(int Orderid) throws SQLException {
+    public double printInvoice(int Orderid, boolean telenorCustomer) throws SQLException {
+
+        double TelenorDiscount = 0.05;
+        double totalprice = 0;
+        double PriceafterDisocunt=0;
 
         PreparedStatement viewOrderItems = connection.prepareStatement(getOrderItemsQuery);
         viewOrderItems.setInt(1, Orderid);
@@ -91,25 +91,33 @@ public class CustomerOperationsImplementation implements customerOperations {
         // Step 3: Execute the query or update query
         ResultSet resultSet = viewOrderItems.executeQuery();
         // Step 4: Display the ResultSet object.
-        int totalprice = 0;
         do {
             if (!resultSet.next()) {
                 System.out.println("No items are available..");
             } else {
                 totalprice += resultSet.getInt("orderprice");
-                System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n---------------------------------------------------");
+                System.out.println("OrderID \t ItemName2 \t ItemID \t OrderQuantity \t OrderPrice \n" + "--------------------------------------------------------------------");
                 System.out.format("%2s %15s %14s %13s %13s", resultSet.getInt("orderid"), resultSet.getString("itemname"),
                         resultSet.getInt("itemid"), resultSet.getInt("orderquantity"), resultSet.getInt("orderprice"));
                 System.out.print("\n");
-                System.out.println("---------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------");
             }
         } while (resultSet.next());
-        System.out.println("total price of order is "+totalprice);
+        System.out.println("Total Price \t\t\t\t\t\t : \t\t\t\t\t\t" + totalprice+"\n");
 
+        System.out.println("Telenor Employee Discount = - "+ TelenorDiscount*totalprice +"\n--------------------------------------------------------------------------");
+
+        PriceafterDisocunt = totalprice - totalprice*TelenorDiscount;
+        System.out.print("Total amount to be paid :"+PriceafterDisocunt);
+        System.out.println("\n  .........Good bye......\n---------------------------------------------------------------");
         return totalprice;
 
     }
 
+    @Override
+    public void markOrderCompleted() throws SQLException {
+
+    }
 }
 
 
