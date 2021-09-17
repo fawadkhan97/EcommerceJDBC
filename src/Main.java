@@ -2,7 +2,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] a) {
+    public static void main(String[] a) throws Exception {
 
         Scanner input = new Scanner(System.in);
         String choice;
@@ -10,6 +10,7 @@ public class Main {
         AdminOperationsImplementation admin;
         CustomerOperationsImplementation customer;
         GetItemsOperations getitems;
+        DbOperations dbOperations;
         Items items;
 
         do {
@@ -22,6 +23,7 @@ public class Main {
                 // admin operations
                 case "1":
                     getitems = new GetItemsOperations();
+
                     try {
                         getitems.getItemsDetails();
                     } catch (SQLException e) {
@@ -100,6 +102,7 @@ public class Main {
                     getitems = new GetItemsOperations();
                     try {
                         getitems.getItemsDetails();
+
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -110,32 +113,49 @@ public class Main {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+
+                    dbOperations = new DbOperations();
+                    // select item base on item id
+                    System.out.print("\n Select items from above list (itemid): ");
                     do {
-                        System.out.print("\nSelect items from above list (itemid): ");
-                        int itemid = input.nextInt();
+                        do {
+                            int itemid = input.nextInt();//get order product quantity
+                            int itemPrice = dbOperations.getItemPrice(itemid);
+                            if (itemPrice == -1) {
+                                getitems.getItemsDetails();
+                                System.out.println("\nincorrect item id.....  :-)");
+                                System.out.print("\n please enter correct id from above list  again : ");
+                                break;
+                            } else {
 
-                        System.out.print("\n Enter quantity: ");
-                        int quantity = input.nextInt();
-                        try {
-                            customer.createOrder_items(itemid, quantity);
 
+                                System.out.print("\n Enter quantity: ");
+                                int quantity = input.nextInt();
+                                try {
+                                    customer.createOrder_items(itemid, quantity, itemPrice);
+                                    System.out.println("do you want to Purchase any more items.  Yes or No ?");
+                               do {
+                                   userchoice = input.next().toLowerCase();
+                                   switch (userchoice) {
+                                       case "yes":
+                                           getitems.getItemsDetails();
+                                           System.out.print("\n Select items from above list (itemid): ");
+                                           break;
+                                       case "no":
+                                           int orderid=  dbOperations.getOrderId();
+                                           //     customer.printInvoice(orderid);
+                                           break;
+                                       default:
+                                           System.out.println("incorrect options was entered .  Do you want to purchase items. Yes or No");
+                                   }
+                               }while (userchoice!="!");
 
-                            System.out.println("do you want to Purchase any more items ?");
-                            userchoice = input.next().toLowerCase();
-                            switch (userchoice) {
-                                case "y":
-                                    System.out.println("Y");
-                                    break;
-                                case "n":
-                                    customer.printOrderDetails();
-                                    break;
-                                default:
-                                    System.out.println("incorrect options was entered");
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-
+                        } while (true);
+                        System.out.print("\n Select items from above list (itemid): ");
                     } while (userchoice != "0");
                     break;
                 default:

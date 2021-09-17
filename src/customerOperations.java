@@ -3,9 +3,9 @@ import java.sql.SQLException;
 public interface customerOperations {
 
     void createOrder () throws SQLException;
-    void createOrder_items(int itemid, int quantity) throws SQLException;
-    void printOrderDetails(int orderid)  throws SQLException;
+    void createOrder_items(int itemid, int quantity,int itemPrice) throws SQLException;
+    void printOrderDetails(int orderid, int itemID)  throws SQLException;
 
     void markOrderCompleted()  throws SQLException;
-    void printInvoice()  throws SQLException;
+    void printInvoice(int Orderid)  throws SQLException;
 }

@@ -3,6 +3,7 @@ public class Items {
     private String itemName;
     private int quantity;
     private int itemprice;
+    private int itemsid;
 
 
     public String getItemName() {
@@ -27,5 +28,13 @@ public class Items {
 
     public void setItemprice(int itemprice) {
         this.itemprice = itemprice;
+    }
+
+    public int getItemsid() {
+        return itemsid;
+    }
+
+    public void setItemsid(int itemsid) {
+        this.itemsid = itemsid;
     }
 }

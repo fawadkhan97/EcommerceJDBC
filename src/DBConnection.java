@@ -3,9 +3,8 @@ import java.sql.*;
 public class DBConnection {
 //   private static String jdbcURL = "jdbc:h2:tcp://localhost/~/test";
    private static String jdbcURL = "jdbc:h2:tcp://localhost/~/test";
-
-    private static String jdbcUsername = "fawad";
-    private static String jdbcPassword = "123";
+    private static String jdbcUsername = "sa";
+    private static String jdbcPassword = "";
 
 
     public static Connection getDBConnection(){
